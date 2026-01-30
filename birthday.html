@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+.section{
+    display:none;
+    width:90%;
+    max-width:900px;
+    height:90vh;
+    background:#fff0f6;
+    border-radius:25px;
+    padding:40px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(255,105,180,0.3);
+    overflow-y:auto;
+    position:relative;
+}
+
+.section.active{display:block;}
+.section.locked{overflow:hidden;}
+
+h1{
+    font-family:'Pacifico',cursive;
+    color:#ff4f9a;
+    font-size:3rem;
+    margin-bottom:20px;
+}
+
+p{font-size:1.2rem;color:#444;margin:15px 0;}
+
+button{
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    background:#ff4f9a;
+    color:white;
+    font-size:1.1rem;
+    cursor:pointer;
+    transition:.3s;
+    margin-top:25px;
+}
+button:hover{transform:scale(1.05);background:#ff2f85;}
+
+img{max-width:100%;border-radius:20px;margin:15px 0;}
+
+/* ======================= */
+/* SECTION 2 MEMORY GRID */
+/* ======================= */
+
+.memory-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:25px;
+    margin-top:30px;
+}
+
+.memory-card{
+    position:relative;
+    border-radius:25px;
+    overflow:hidden;
+    box-shadow:0 12px 30px rgba(255,79,154,.35);
+    transition:.4s;
+}
+
+.memory-card img{
+    width:100%;
+    height:280px;
+    object-fit:cover;
+}
+
+/* TEXT OVERLAY */
+.memory-card .overlay{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+    font-family:'Pacifico',cursive;
+    font-size:1.3rem;
+    color:white;
+    background:linear-gradient(
+        to top,
+        rgba(255,79,154,0.85),
+        rgba(255,79,154,0.2)
+    );
+    opacity:0;
+    transition:.4s ease;
+}
+
+.memory-card:hover .overlay,
+.memory-card.show-text .overlay{
+    opacity:1;
+}
+
+.memory-card:hover{
+    transform:translateY(-8px) scale(1.03);
+}
+
+/* Lock */
+.lock-screen{margin-top:50px;}
+.lock-heart{font-size:4.5rem;margin-bottom:10px;}
+.lock-input{
+    padding:14px;
+    width:220px;
+    border-radius:30px;
+    border:2px solid #ff4f9a;
+    outline:none;
+    font-size:1.1rem;
+    text-align:center;
+}
+.lock-msg{margin-top:10px;font-weight:500;color:#ff4f9a;}
+
+/* ======================= */
+/* PHOTO CLOUD */
+/* ======================= */
+
+.photo-cloud{
+    position:relative;
+    width:100%;
+    height:80vh;
+    margin-top:20px;
+}
+
+.photo-cloud img{
+    position:absolute;
+    width:140px;
+    max-width:40vw;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(255,79,154,.45);
+    animation:floatPic 5s ease-in-out infinite;
+}
+
+@keyframes floatPic{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-15px);}
+}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:.8s;}
+.reveal.show{opacity:1;transform:translateY(0);}
+.reveal-img{opacity:0;transform:scale(.95);transition:.9s;}
+.reveal-img.show{opacity:1;transform:scale(1);}
+
+/* Floating hearts */
+.heart{
+    position:absolute;
+    bottom:-50px;
+    animation:float 6s infinite;
+    color:#ff4f9a;
+}
+@keyframes float{
+    0%{transform:translateY(0);opacity:1;}
+    100%{transform:translateY(-110vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- SECTION 1 -->
+<div class="section active" id="section1">
+<h1 class="reveal">Happy Birthday <span id="name1"></span> 💕</h1>
+<img width="200" src="giphy.gif">
+<p class="reveal">Today is all about YOU 🥰</p>
+<button onclick="nextSection(1)">Next 💖</button>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section" id="section2">
+<h1>Our Memories 🔒</h1>
+
+<div class="lock-screen" id="lockScreen">
+    <div class="lock-heart" id="lockHeart">🤍</div>
+    <p class="lock-msg" id="lockMessage">Type her name to unlock 💌</p>
+    <input class="lock-input" id="passwordInput" placeholder="Her name" oninput="checkNameLive()">
+</div>
+
+<div id="memoriesContent" style="display:none;">
+    <div class="memory-grid">
+        <div class="memory-card">
+            <img src="moments1.png">
+            <div class="overlay">Thankful to have you 💕</div>
+        </div>
+        <div class="memory-card">
+            <img src="moments2.png">
+            <div class="overlay">My favorite us 🥰</div>
+        </div>
+        <div class="memory-card">
+            <img src="moments3.png">
+            <div class="overlay">Forever vibes ✨</div>
+        </div>
+        <div class="memory-card">
+            <img src="moments4.png">
+            <div class="overlay">Always you 💖</div>
+        </div>
+    </div>
+    <button onclick="nextSection(2)">Next 💗</button>
+</div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section photo-wall" id="section3">
+<h1 class="reveal">You Everywhere 💞</h1>
+
+<div class="photo-cloud" id="photoCloud">
+    <img src="op1.png" class="reveal-img">
+    <img src="op2.png" class="reveal-img">
+    <img src="op3.png" class="reveal-img">
+    <img src="op4.png" class="reveal-img">
+    <img src="op5.png" class="reveal-img">
+    <img src="op6.png" class="reveal-img">
+</div>
+
+<p class="reveal">Everywhere I look… it’s you 💖</p>
+<button onclick="nextSection(3)">Next 🌷</button>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section" id="section4">
+<h1 class="reveal">Just For You 🌸</h1>
+<p class="reveal"><span id="name2"></span>, you make my world brighter 💕</p>
+<img src="gif2.gif" class="reveal-img">
+<button onclick="nextSection(4)">One Last Thing 💌</button>
+</div>
+
+<!-- FINAL -->
+<div class="section locked" id="section5">
+<h1 class="reveal">I LOVE YOU 💖</h1>
+<p class="reveal">Forever & Always 💞</p>
+</div>
+
+<script>
+const HER_NAME="Prasamsha";
+name1.innerText=HER_NAME;
+name2.innerText=HER_NAME;
+
+document.body.addEventListener("click",()=>bgMusic.play(),{once:true});
+
+function nextSection(n){
+    document.getElementById("section"+n).classList.remove("active");
+    document.getElementById("section"+(n+1)).classList.add("active");
+}
+
+/* Reveal observer */
+const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>e.isIntersecting && e.target.classList.add("show"));
+},{threshold:.15});
+document.querySelectorAll(".reveal,.reveal-img").forEach(el=>observer.observe(el));
+
+/* Lock */
+function checkNameLive(){
+    const v=passwordInput.value.trim();
+    if(v===""){lockHeart.innerHTML="🤍";lockMessage.innerText="Type her name to unlock 💌";return;}
+    if(HER_NAME.startsWith(v)){lockHeart.innerHTML="💖";lockMessage.innerText="That feels right… 💕";}
+    else{lockHeart.innerHTML="💔";lockMessage.innerText="Hmm… not quite 😅";}
+    if(v===HER_NAME){
+        setTimeout(()=>{
+            lockScreen.style.display="none";
+            memoriesContent.style.display="block";
+
+            /* AUTO SHOW TEXT ON MOBILE */
+            if(window.innerWidth < 768){
+                document.querySelectorAll(".memory-card").forEach((card,i)=>{
+                    setTimeout(()=>card.classList.add("show-text"),800+(i*600));
+                });
+            }
+
+        },500);
+    }
+}
+
+/* Photo cloud auto scatter */
+const cloud=document.getElementById("photoCloud");
+if(cloud){
+[...cloud.children].forEach(img=>{
+    img.style.top=Math.random()*75+"%";
+    img.style.left=Math.random()*85+"%";
+    img.style.transform=`rotate(${Math.random()*20-10}deg)`;
+});
+}
+
+/* Floating hearts */
+setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💖";
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=(15+Math.random()*25)+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+},600);
+</script>
+
+</body>
+</html>
